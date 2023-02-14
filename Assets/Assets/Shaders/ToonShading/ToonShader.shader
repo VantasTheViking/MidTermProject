@@ -4,6 +4,8 @@ Shader "Custom/ToonShader"
     {
         _Color("Color", Color) = (1,1,1,1)
         _RampTex("Ramp Texture", 2D) = "white" {}
+        _MainTex("Texture", 2D) = "white" {}
+        _Str("Strenght", float) = 1
 
     }
         SubShader
@@ -16,6 +18,8 @@ Shader "Custom/ToonShader"
 
         float4 _Color;
         sampler2D _RampTex;
+        sampler2D _MainTex;
+        float _Str;
 
         half4 LightingToonRamp(SurfaceOutput s, half3 lightDir, fixed atten) {
             //half3 h = normalize(lightDir + viewDir);
@@ -28,7 +32,7 @@ Shader "Custom/ToonShader"
             //float spec = pow(nh, 48.0);
 
             half4 c;
-            c.rgb = s.Albedo * _LightColor0.rgb * (ramp);
+            c.rgb = s.Albedo * _LightColor0.rgb * (ramp) * _Str;
             c.a = s.Alpha;
             return c;
         }
@@ -44,9 +48,9 @@ Shader "Custom/ToonShader"
 
         void surf(Input IN, inout SurfaceOutput o)
         {
-
-            o.Albedo = _Color.rgb;
-
+            
+            o.Albedo = tex2D(_MainTex, IN.uv_MainTex).rgb * _Color.rgb;
+            
         }
         ENDCG
     }

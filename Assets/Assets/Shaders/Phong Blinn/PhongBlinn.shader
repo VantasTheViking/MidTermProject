@@ -6,13 +6,13 @@ Shader "Custom/PhongBlinn"
         _SpecColor("Color", Color) = (1,1,1,1)
         _Spec("Specular", Range(0,1)) = 0.5
         _Gloss("Gloss", Range(0, 1)) = 0.5
-    }
+        _Str("Strenght", float) = 1 }
     SubShader
     {
         Tags { "Queue"="Geometry" }
 
         CGPROGRAM
-        // Physically based Standard lighting model, and enable shadows on all light types
+        
         #pragma surface surf BlinnPhong
 
         // Use shader model 3.0 target, to get nicer looking lighting
@@ -25,6 +25,7 @@ Shader "Custom/PhongBlinn"
 
         float4 _Color;
         half _Spec;
+        float _Str;
         fixed _Gloss;
 
         
@@ -34,7 +35,7 @@ Shader "Custom/PhongBlinn"
             // Albedo comes from a texture tinted by color
             
             o.Albedo = _Color.rgb;
-            o.Specular = _Spec;
+            o.Specular = _Spec * _SpecColor * _Str;
             o.Gloss = _Gloss;
         }
         ENDCG
